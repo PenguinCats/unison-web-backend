@@ -1,7 +1,5 @@
 package models
 
-import "gorm.io/gorm"
-
 type User struct {
 	UID       int64  `gorm:"column:uid, primaryKey"`
 	Username  string `gorm:"column:username"`
@@ -20,7 +18,7 @@ func GetUIDByUserName(username string) (int64, error) {
 	//user.Username = username
 	var uid int64
 	err := db.Model(&User{}).Select("uid").Where("username = ?", username).Take(&uid).Error
-	if err != nil && err != gorm.ErrRecordNotFound {
+	if err != nil {
 		return 0, err
 	}
 
@@ -58,9 +56,19 @@ func GetUserAll() ([]*User, error) {
 func GetAuthByUID(uid int64) (int64, error) {
 	var auth int64
 	err := db.Model(&User{}).Select("authority").Where("uid = ?", uid).Take(&auth).Error
-	if err != nil && err != gorm.ErrRecordNotFound {
+	if err != nil {
 		return 0, err
 	}
 
 	return auth, nil
+}
+
+func GetPwdByUid(uid int64) (string, error) {
+	var pwd string
+	err := db.Model(&User{}).Select("password").Where("uid = ?", uid).Take(&pwd).Error
+	if err != nil {
+		return "", err
+	}
+
+	return pwd, nil
 }

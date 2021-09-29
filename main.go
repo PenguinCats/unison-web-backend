@@ -5,6 +5,8 @@ import (
 	"github.com/PenguinCats/unison-web-backend/models"
 	"github.com/PenguinCats/unison-web-backend/pkg/setting"
 	"github.com/PenguinCats/unison-web-backend/pkg/util"
+	"github.com/PenguinCats/unison-web-backend/routers"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -19,12 +21,14 @@ func init() {
 func main() {
 	gin.SetMode(setting.ServerSetting.RunMode)
 
-	router := gin.Default()
-	router.GET("/test", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "test",
-		})
-	})
+	//router := gin.Default()
+	//router.GET("/test", func(c *gin.Context) {
+	//	c.JSON(200, gin.H{
+	//		"message": "test",
+	//	})
+	//})
+
+	router := routers.InitRouter()
 
 	s := &http.Server{
 		Addr:           fmt.Sprintf(":%d", setting.ServerSetting.HttpPort),
@@ -34,5 +38,9 @@ func main() {
 		MaxHeaderBytes: 1 << 20,
 	}
 
-	s.ListenAndServe()
+	err := s.ListenAndServe()
+	if err != nil {
+		log.Fatalln(err.Error())
+		return
+	}
 }

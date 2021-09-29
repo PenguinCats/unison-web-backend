@@ -49,3 +49,15 @@ func TestGetUserAll(t *testing.T) {
 		t.Fatal(err.Error())
 	}
 }
+
+func TestGetPwdByUid(t *testing.T) {
+	setupForTest()
+	pwd, err := GetPwdByUid(1)
+	fmt.Println(pwd, err)
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+	if pwd != "35468eae9c9d874927ae7f13991e437a" {
+		t.Fatal("查询到错误数据")
+	}
+}

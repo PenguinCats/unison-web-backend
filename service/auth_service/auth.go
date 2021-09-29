@@ -31,7 +31,3 @@ func (a *Auth) IsAdmin() bool {
 	}
 	return true
 }
-
-func (a *Auth) LoginByUserName() bool {
-	return false
-}
