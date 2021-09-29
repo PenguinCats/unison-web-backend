@@ -29,8 +29,7 @@ func LoginNormal(c *gin.Context) {
 	appG := app.Gin{C: c}
 
 	var authInstance auth
-	err := c.BindJSON(&authInstance)
-	if err != nil {
+	if err := c.BindJSON(&authInstance); err != nil {
 		appG.Response(http.StatusOK, e.INVALID_PARAMS, nil)
 		return
 	}
@@ -39,14 +38,18 @@ func LoginNormal(c *gin.Context) {
 		Username: authInstance.Username,
 	}
 
-	err = userService.FillUidByUserName()
-	if err != nil {
+	if err := userService.FillUidByUserName(); err != nil {
 		appG.Response(http.StatusOK, e.ERROR_AUTH_LOGIN_WRONG_UNAME_PWD, nil)
 		return
 	}
 
 	if !userService.CheckPassword(authInstance.Password, authInstance.Salt) {
 		appG.Response(http.StatusOK, e.ERROR_AUTH_LOGIN_WRONG_UNAME_PWD, nil)
+		return
+	}
+
+	if err := userService.FillAuthorityByUid(); err != nil {
+		appG.Response(http.StatusOK, e.ERROR, nil)
 		return
 	}
 
@@ -64,7 +67,8 @@ func LoginNormal(c *gin.Context) {
 	//}
 
 	appG.Response(http.StatusOK, e.SUCCESS, gin.H{
-		"uid":   userService.UID,
-		"token": token,
+		"uid":       userService.UID,
+		"authority": userService.Authority,
+		"token":     token,
 	})
 }

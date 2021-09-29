@@ -25,6 +25,16 @@ func (u *User) FillUidByUserName() error {
 	return nil
 }
 
+func (u *User) FillAuthorityByUid() error {
+	authority, err := models.GetAuthByUID(u.UID)
+	if err != nil {
+		return err
+	}
+
+	u.Authority = authority
+	return nil
+}
+
 func (u *User) CheckPassword(pwdSalt, salt string) bool {
 	if u.UID == 0 {
 		log.Println("uid is not fetched")
