@@ -72,3 +72,13 @@ func GetPwdByUid(uid int64) (string, error) {
 
 	return pwd, nil
 }
+
+func GetUserProfileByUID(uid int64) (*User, error) {
+	var user User
+	err := db.Model(&User{}).Select("uid", "name", "authority", "seu_id").
+		Where("uid = ?", uid).Take(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}

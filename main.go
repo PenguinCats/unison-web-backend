@@ -21,13 +21,6 @@ func init() {
 func main() {
 	gin.SetMode(setting.ServerSetting.RunMode)
 
-	//router := gin.Default()
-	//router.GET("/test", func(c *gin.Context) {
-	//	c.JSON(200, gin.H{
-	//		"message": "test",
-	//	})
-	//})
-
 	router := routers.InitRouter()
 
 	s := &http.Server{

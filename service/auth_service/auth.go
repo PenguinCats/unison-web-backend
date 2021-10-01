@@ -31,3 +31,17 @@ func (a *Auth) IsAdmin() bool {
 	}
 	return true
 }
+
+func (a *Auth) IsSelfOrRoot(outerUID int64) bool {
+	if a.Uid == outerUID || a.IsRoot() {
+		return true
+	}
+	return false
+}
+
+func (a *Auth) IsSelfOrAdmin(outerUID int64) bool {
+	if a.Uid == outerUID || a.IsAdmin() {
+		return true
+	}
+	return false
+}

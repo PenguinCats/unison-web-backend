@@ -67,3 +67,16 @@ func (u *User) GetUserByUid() error {
 
 	return nil
 }
+
+func (u *User) GetUserProfileByUid() error {
+	user, err := models.GetUserProfileByUID(u.UID)
+	if err != nil {
+		return err
+	}
+
+	u.Name = user.Name
+	u.Authority = user.Authority
+	u.SeuID = user.SeuID
+
+	return nil
+}

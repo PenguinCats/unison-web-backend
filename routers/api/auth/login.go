@@ -9,10 +9,16 @@ import (
 	"net/http"
 )
 
-type auth struct {
+type loginRequest struct {
 	Username string `json:"uname"`
 	Password string `json:"upwd"`
 	Salt     string `json:"salt"`
+}
+
+type loginResponse struct {
+	Uid       int64  `json:"uid"`
+	Authority int64  `json:"authority"`
+	Token     string `json:"token"`
 }
 
 // LoginNormal godoc
@@ -22,13 +28,13 @@ type auth struct {
 // @Param name body string true "Name"
 // @Param state body int false "State"
 // @Param created_by body int false "CreatedBy"
-// @Param auth body auth true "auth 认证信息"
+// @Param loginRequest body loginRequest true "loginRequest 认证信息"
 // @Success 200 {object} app.Response
-// @Router /api/auth/login_normal [post]
+// @Router /api/loginRequest/login_normal [post]
 func LoginNormal(c *gin.Context) {
 	appG := app.Gin{C: c}
 
-	var authInstance auth
+	var authInstance loginRequest
 	if err := c.BindJSON(&authInstance); err != nil {
 		appG.Response(http.StatusOK, e.INVALID_PARAMS, nil)
 		return
@@ -66,9 +72,9 @@ func LoginNormal(c *gin.Context) {
 	//	return
 	//}
 
-	appG.Response(http.StatusOK, e.SUCCESS, gin.H{
-		"uid":       userService.UID,
-		"authority": userService.Authority,
-		"token":     token,
+	appG.Response(http.StatusOK, e.SUCCESS, loginResponse{
+		Uid:       userService.UID,
+		Authority: userService.Authority,
+		Token:     token,
 	})
 }

@@ -1,7 +1,9 @@
 package util
 
 import (
+	"github.com/PenguinCats/unison-web-backend/pkg/e"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
 	"time"
 )
 
@@ -43,4 +45,36 @@ func ParseToken(token string) (*Claims, error) {
 	}
 
 	return nil, err
+}
+
+func CheckClaims(token string) (*Claims, int) {
+	code := e.SUCCESS
+	claims, err := ParseToken(token)
+	if err != nil {
+		switch err.(*jwt.ValidationError).Errors {
+		case jwt.ValidationErrorExpired:
+			code = e.ERROR_AUTH_CHECK_TOKEN_TIMEOUT
+		default:
+			code = e.ERROR_AUTH_CHECK_TOKEN_FAIL
+		}
+	}
+
+	return claims, code
+}
+
+func ParseUidFromContext(c *gin.Context) (int64, int) {
+	token := c.Request.Header.Get("Authorization")
+	if token == "" {
+		return 0, e.ERROR_AUTH_CHECK_TOKEN_FAIL
+	}
+	claims, code := CheckClaims(token)
+	if code != e.SUCCESS {
+		return 0, code
+	}
+
+	if claims.Uid == 0 {
+		return 0, e.ERROR_AUTH_CHECK_TOKEN_FAIL
+	}
+
+	return claims.Uid, e.SUCCESS
 }
