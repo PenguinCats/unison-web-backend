@@ -57,7 +57,4 @@ func TestGetPwdByUid(t *testing.T) {
 	if err != nil {
 		t.Fatal(err.Error())
 	}
-	if pwd != "35468eae9c9d874927ae7f13991e437a" {
-		t.Fatal("查询到错误数据")
-	}
 }

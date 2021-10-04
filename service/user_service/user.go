@@ -1,6 +1,7 @@
 package user_service
 
 import (
+	"errors"
 	"github.com/PenguinCats/unison-web-backend/models"
 	"github.com/PenguinCats/unison-web-backend/pkg/util"
 	"log"
@@ -79,4 +80,27 @@ func (u *User) GetUserProfileByUid() error {
 	u.SeuID = user.SeuID
 
 	return nil
+}
+
+func (u *User) GetUserprofilesByUids(uids []int64) (*[]models.User, error) {
+	users, err := models.GetUserProfilesByUIDs(uids)
+	if err != nil {
+		return nil, err
+	}
+
+	mp := make(map[int64]models.User)
+	for _, item := range *users {
+		mp[item.UID] = item
+	}
+
+	var usersRet []models.User
+	for _, uid := range uids {
+		val, ok := mp[uid]
+		if !ok {
+			return nil, errors.New("user broken")
+		}
+		usersRet = append(usersRet, val)
+	}
+
+	return &usersRet, nil
 }

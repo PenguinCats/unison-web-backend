@@ -1,7 +1,7 @@
 package models
 
 type User struct {
-	UID       int64  `gorm:"column:uid, primaryKey"`
+	UID       int64  `gorm:"column:uid; primaryKey"`
 	Username  string `gorm:"column:username"`
 	Password  string `gorm:"column:password"`
 	Name      string `gorm:"column:name"`
@@ -36,7 +36,6 @@ func ExistUserByUserName(username string) (bool, error) {
 
 func GetUserByUID(uid int64) (*User, error) {
 	var user User
-	user.UID = uid
 	err := db.Where("uid = ?", uid).Take(&user).Error
 	if err != nil {
 		return nil, err
@@ -81,4 +80,14 @@ func GetUserProfileByUID(uid int64) (*User, error) {
 		return nil, err
 	}
 	return &user, nil
+}
+
+func GetUserProfilesByUIDs(uids []int64) (*[]User, error) {
+	var users []User
+	err := db.Model(&User{}).Select("uid", "name", "authority", "seu_id").
+		Where("uid IN ?", uids).Find(&users).Error
+	if err != nil {
+		return nil, err
+	}
+	return &users, nil
 }
