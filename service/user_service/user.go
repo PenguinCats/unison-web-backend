@@ -14,6 +14,8 @@ type User struct {
 	Name      string
 	Authority int64
 	SeuID     string
+
+	Query string
 }
 
 func (u *User) FillUidByUserName() error {
@@ -82,7 +84,7 @@ func (u *User) GetUserProfileByUid() error {
 	return nil
 }
 
-func (u *User) GetUserprofilesByUids(uids []int64) (*[]models.User, error) {
+func (u *User) GetUserProfilesByUids(uids []int64) (*[]models.User, error) {
 	users, err := models.GetUserProfilesByUIDs(uids)
 	if err != nil {
 		return nil, err
@@ -103,4 +105,8 @@ func (u *User) GetUserprofilesByUids(uids []int64) (*[]models.User, error) {
 	}
 
 	return &usersRet, nil
+}
+
+func (u *User) GetUserProfileByQueryString() (*[]models.User, error) {
+	return models.GetUserProfilesByQuery(u.Query)
 }

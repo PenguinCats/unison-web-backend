@@ -45,19 +45,19 @@ func GetMessageProfileByUid(uid int64) (*[]Message, error) {
 	return &message, nil
 }
 
-func AddMessage(title, text string, fromUid int64) (int64, error) {
-	message := Message{
-		Title:   title,
-		Text:    text,
-		FromUid: fromUid,
-	}
-	err := db.Create(&message).Error
-	if err != nil {
-		return 0, err
-	}
-
-	return message.Mid, nil
-}
+//func AddMessage(title, text string, fromUid int64) (int64, error) {
+//	message := Message{
+//		Title:   title,
+//		Text:    text,
+//		FromUid: fromUid,
+//	}
+//	err := db.Create(&message).Error
+//	if err != nil {
+//		return 0, err
+//	}
+//
+//	return message.Mid, nil
+//}
 
 type MessageUser struct {
 	ID    int64 `gorm:"column:id"`
@@ -88,17 +88,17 @@ func GetMessageUserByMids(mids []int64) (*[]MessageUser, error) {
 	return &messageUser, nil
 }
 
-func AddMessageUser(uids []int64, mid int64) error {
-	messageUsers := make([]MessageUser, len(uids))
-	for idx, uid := range uids {
-		messageUsers[idx].ToUid = uid
-		messageUsers[idx].Mid = mid
-		messageUsers[idx].State = 1
-	}
-
-	err := db.Create(&messageUsers).Error
-	return err
-}
+//func AddMessageUser(uids []int64, mid int64) error {
+//	messageUsers := make([]MessageUser, len(uids))
+//	for idx, uid := range uids {
+//		messageUsers[idx].ToUid = uid
+//		messageUsers[idx].Mid = mid
+//		messageUsers[idx].State = 1
+//	}
+//
+//	err := db.Create(&messageUsers).Error
+//	return err
+//}
 
 func GetMessageNumberByToUid(uid int64) (int64, error) {
 	var count int64
@@ -110,10 +110,49 @@ func GetMessageNumberByToUid(uid int64) (int64, error) {
 	return count, nil
 }
 
-func CheckMessageUserExist(mid, uid int64) error {
+func CheckMessageUserExist(mid, uid int64) (*MessageUser, error) {
 	var mu MessageUser
-	return db.Where(&MessageUser{
+	return &mu, db.Where(&MessageUser{
 		ToUid: uid,
 		Mid:   mid,
 	}).Not("state = 3").Take(&mu).Error
+}
+
+func MarkAsRead(id int64) error {
+	err := db.Model(&MessageUser{ID: id}).Update("state", 2).Error
+	return err
+}
+
+func MarkAsDelete(id int64) error {
+	err := db.Model(&MessageUser{ID: id}).Update("state", 3).Error
+	return err
+}
+
+// union operation
+
+func AddMessageUnion(fromUid int64, toUids []int64, title, text string) error {
+	err := db.Transaction(func(tx *gorm.DB) error {
+		message := Message{
+			Title:   title,
+			Text:    text,
+			FromUid: fromUid,
+		}
+		if err := tx.Create(&message).Error; err != nil {
+			return err
+		}
+
+		messageUsers := make([]MessageUser, len(toUids))
+		for idx, uid := range toUids {
+			messageUsers[idx].ToUid = uid
+			messageUsers[idx].Mid = message.Mid
+			messageUsers[idx].State = 1
+		}
+		if err := tx.Create(&messageUsers).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	return err
 }

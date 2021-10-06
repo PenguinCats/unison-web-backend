@@ -5,7 +5,9 @@ import (
 	"github.com/PenguinCats/unison-web-backend/pkg/setting"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"log"
+	"os"
 )
 
 var db *gorm.DB
@@ -19,7 +21,20 @@ func Setup() {
 		setting.MysqlSetting.Host,
 		setting.MysqlSetting.Name,
 	)
-	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+
+	if setting.ServerSetting.RunMode == "debug" {
+		newLoagger := logger.New(
+			log.New(os.Stdout, "\r\n", log.LstdFlags),
+			logger.Config{
+				LogLevel: logger.Info,
+			})
+
+		db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+			Logger: newLoagger,
+		})
+	} else {
+		db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	}
 
 	if err != nil {
 		log.Fatalf("models.Setup err: %v", err)

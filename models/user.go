@@ -91,3 +91,15 @@ func GetUserProfilesByUIDs(uids []int64) (*[]User, error) {
 	}
 	return &users, nil
 }
+
+func GetUserProfilesByQuery(query string) (*[]User, error) {
+	query = "%" + query + "%"
+
+	var users []User
+	err := db.Model(&User{}).Select("uid", "name", "authority", "seu_id").
+		Where("name LIKE ?", query).Or("seu_id LIKE ?", query).Find(&users).Error
+	if err != nil {
+		return nil, err
+	}
+	return &users, nil
+}

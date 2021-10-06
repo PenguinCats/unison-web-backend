@@ -20,9 +20,13 @@ func InitRouter() *gin.Engine {
 	apiG.POST("/auth/login_normal", auth.LoginNormal)
 
 	apiG.POST("/user/profile", jwt.AuthLogin, user.GetUserProfile)
+	apiG.POST("/user/search", jwt.AuthLogin, user.GetUserSearch)
 
 	apiG.POST("/message/message_inbox_profile_list", jwt.AuthLogin, message.GetMessageInboxProfileList)
 	apiG.POST("/message/message_inbox_detail", jwt.AuthLogin, message.GetMessageInboxDetail)
+	apiG.POST("/message/add", jwt.AuthLogin, message.AddMessage)
+	apiG.POST("/message/delete", jwt.AuthLogin, message.DeleteMessageAsUserView)
+	apiG.POST("/message/mark_read", jwt.AuthLogin, message.MarkAsReadMessage)
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	return r

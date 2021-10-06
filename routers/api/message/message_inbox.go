@@ -66,12 +66,12 @@ func GetMessageInboxProfileList(c *gin.Context) {
 	}
 
 	var uids []int64
-	for _, item := range *messageUserList {
-		uids = append(uids, item.ToUid)
+	for _, item := range *messageList {
+		uids = append(uids, item.FromUid)
 	}
 
 	userService := user_service.User{}
-	users, err := userService.GetUserprofilesByUids(uids)
+	users, err := userService.GetUserProfilesByUids(uids)
 	if err != nil {
 		code = e.ERROR
 		appG.Response(http.StatusOK, code, nil)
