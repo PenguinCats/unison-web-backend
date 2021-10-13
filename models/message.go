@@ -70,9 +70,9 @@ func (MessageUser) TableName() string {
 	return "message_user"
 }
 
-func GetMessageUserByUid(uid, offset, limit int64) (*[]MessageUser, error) {
+func GetMessageUserByUid(uid int64, offset, limit int) (*[]MessageUser, error) {
 	var messageUser []MessageUser
-	err := db.Where("to_uid = ?", uid).Not("state = 3").Find(&messageUser).Error
+	err := db.Where("to_uid = ?", uid).Not("state = 3").Offset(offset).Limit(limit).Find(&messageUser).Error
 	if err != nil {
 		return nil, err
 	}

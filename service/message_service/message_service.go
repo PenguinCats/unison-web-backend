@@ -36,7 +36,7 @@ func (m *Message) GetMessageInboxProfileByToUid() (*[]models.Message, *[]models.
 	if m.PageSize <= 0 {
 		m.PageSize = 10
 	}
-	messageUserList, err := models.GetMessageUserByUid(m.ToUid, offset, m.PageSize)
+	messageUserList, err := models.GetMessageUserByUid(m.ToUid, int(offset), int(m.PageSize))
 	if err != nil {
 		return nil, nil, err
 	}

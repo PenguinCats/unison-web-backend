@@ -52,6 +52,26 @@ func GetUserAll() ([]*User, error) {
 	return users, nil
 }
 
+func GetUserCount() (int64, error) {
+	var count int64
+	err := db.Model(&User{}).Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
+func GetUserList(offset, limit int) (*[]User, error) {
+	var users []User
+	err := db.Select("uid", "username", "name", "authority", "seu_id").Offset(offset).
+		Limit(limit).Find(&users).Error
+	if err != nil {
+		return nil, err
+	}
+	return &users, nil
+}
+
 func GetAuthByUID(uid int64) (int64, error) {
 	var auth int64
 	err := db.Model(&User{}).Select("authority").Where("uid = ?", uid).Take(&auth).Error

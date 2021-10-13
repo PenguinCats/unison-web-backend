@@ -94,7 +94,7 @@ func GetMessageInboxProfileList(c *gin.Context) {
 	totalNumber, err := messageService.GetTotalMessageCountByToUid()
 	if err != nil {
 		code = e.ERROR
-		appG.Response(http.StatusOK, e.ERROR, nil)
+		appG.Response(http.StatusOK, code, nil)
 		return
 	}
 	response.TotalNumber = totalNumber

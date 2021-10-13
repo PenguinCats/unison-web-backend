@@ -16,6 +16,27 @@ type User struct {
 	SeuID     string
 
 	Query string
+
+	PageSize   int64
+	PageNumber int64
+}
+
+func (u *User) GetUserList() (*[]models.User, error) {
+	offset := u.PageSize * (u.PageNumber - 1)
+	if offset < 0 {
+		offset = 0
+	}
+	if u.PageSize <= 0 {
+		u.PageSize = 10
+	}
+
+	userList, err := models.GetUserList(int(offset), int(u.PageSize))
+
+	return userList, err
+}
+
+func (u *User) GetTotalUser() (int64, error) {
+	return models.GetUserCount()
 }
 
 func (u *User) FillUidByUserName() error {
