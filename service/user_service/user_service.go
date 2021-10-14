@@ -3,6 +3,7 @@ package user_service
 import (
 	"errors"
 	"github.com/PenguinCats/unison-web-backend/models"
+	"github.com/PenguinCats/unison-web-backend/pkg/e"
 	"github.com/PenguinCats/unison-web-backend/pkg/util"
 	"log"
 )
@@ -130,4 +131,12 @@ func (u *User) GetUserProfilesByUids(uids []int64) (*[]models.User, error) {
 
 func (u *User) GetUserProfileByQueryString() (*[]models.User, error) {
 	return models.GetUserProfilesByQuery(u.Query)
+}
+
+func (u *User) DeleteUserByUid() int {
+	err := models.DeleteUser(u.UID)
+	if err != nil {
+		return e.ERROR
+	}
+	return e.SUCCESS
 }

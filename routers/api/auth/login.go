@@ -21,16 +21,6 @@ type loginResponse struct {
 	Token     string `json:"token"`
 }
 
-// LoginNormal godoc
-// @Summary 使用用户名密码的常规登陆方式
-// @Schemes
-// @Tags example
-// @Param name body string true "Name"
-// @Param state body int false "State"
-// @Param created_by body int false "CreatedBy"
-// @Param loginRequest body loginRequest true "loginRequest 认证信息"
-// @Success 200 {object} app.Response
-// @Router /api/loginRequest/login_normal [post]
 func LoginNormal(c *gin.Context) {
 	appG := app.Gin{C: c}
 

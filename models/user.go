@@ -123,3 +123,7 @@ func GetUserProfilesByQuery(query string) (*[]User, error) {
 	}
 	return &users, nil
 }
+
+func DeleteUser(uid int64) error {
+	return db.Delete(&User{}, uid).Error
+}

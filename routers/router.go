@@ -18,6 +18,7 @@ func InitRouter() *gin.Engine {
 	apiG.POST("/user/profile", jwt.AuthLogin, user.GetUserProfile)
 	apiG.POST("/user/search", jwt.AuthLogin, user.GetUserSearch)
 	apiG.POST("/user/list", jwt.AuthAdmin, user.GetUserList)
+	apiG.POST("/user/delete", jwt.AuthAdmin, user.DeleteUser)
 
 	apiG.POST("/message/message_inbox_profile_list", jwt.AuthLogin, message.GetMessageInboxProfileList)
 	apiG.POST("/message/message_inbox_detail", jwt.AuthLogin, message.GetMessageInboxDetail)
