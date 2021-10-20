@@ -40,3 +40,7 @@ func Setup() {
 		log.Fatalf("models.Setup err: %v", err)
 	}
 }
+
+func NewContextForTransaction() *gorm.DB {
+	return db.Begin()
+}

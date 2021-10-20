@@ -16,6 +16,8 @@ type User struct {
 	Authority int64
 	SeuID     string
 
+	PermissionGroup []int64
+
 	Query string
 
 	PageSize   int64
@@ -138,5 +140,33 @@ func (u *User) DeleteUserByUid() int {
 	if err != nil {
 		return e.ERROR
 	}
+	return e.SUCCESS
+}
+
+func (u *User) AddUserUnion() int {
+	tx := models.NewContextForTransaction()
+
+	user, err := models.UserAdd(tx, models.User{
+		Username:  u.Username,
+		Password:  u.Password,
+		Name:      u.Name,
+		Authority: u.Authority,
+		SeuID:     u.SeuID,
+	})
+
+	if err != nil {
+		tx.Rollback()
+		return e.ERROR
+	}
+
+	if len(u.PermissionGroup) > 0 {
+		err = models.AddPermissionUser(tx, user.UID, u.PermissionGroup)
+		if err != nil {
+			tx.Rollback()
+			return e.ERROR
+		}
+	}
+
+	tx.Commit()
 	return e.SUCCESS
 }

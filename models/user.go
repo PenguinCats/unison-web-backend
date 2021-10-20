@@ -1,5 +1,7 @@
 package models
 
+import "gorm.io/gorm"
+
 type User struct {
 	UID       int64  `gorm:"column:uid; primaryKey"`
 	Username  string `gorm:"column:username"`
@@ -126,4 +128,9 @@ func GetUserProfilesByQuery(query string) (*[]User, error) {
 
 func DeleteUser(uid int64) error {
 	return db.Delete(&User{}, uid).Error
+}
+
+func UserAdd(tx *gorm.DB, u User) (*User, error) {
+	err := tx.Create(&u).Error
+	return &u, err
 }
