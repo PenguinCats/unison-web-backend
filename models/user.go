@@ -96,7 +96,7 @@ func GetPwdByUid(uid int64) (string, error) {
 
 func GetUserProfileByUID(uid int64) (*User, error) {
 	var user User
-	err := db.Model(&User{}).Select("uid", "name", "authority", "seu_id").
+	err := db.Model(&User{}).Select("uid", "name", "username", "authority", "seu_id").
 		Where("uid = ?", uid).Take(&user).Error
 	if err != nil {
 		return nil, err
@@ -133,4 +133,18 @@ func DeleteUser(uid int64) error {
 func UserAdd(tx *gorm.DB, u User) (*User, error) {
 	err := tx.Create(&u).Error
 	return &u, err
+}
+
+func UserEdit(tx *gorm.DB, u User) error {
+	err := tx.Model(&u).Updates(User{
+		Name:      u.Name,
+		Authority: u.Authority,
+		SeuID:     u.SeuID,
+	}).Error
+	return err
+}
+
+func EditUserPassword(uid int64, pwd string) error {
+	err := db.Model(&User{UID: uid}).Update("password", pwd).Error
+	return err
 }

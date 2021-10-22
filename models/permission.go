@@ -46,6 +46,9 @@ func GetPermissionGroupIDByUid(uid int64) (*[]int64, error) {
 }
 
 func AddPermissionUser(tx *gorm.DB, uid int64, groupIdList []int64) error {
+	if len(groupIdList) == 0 {
+		return nil
+	}
 	var puList []PermissionUser
 	for _, gid := range groupIdList {
 		puList = append(puList, PermissionUser{
@@ -54,5 +57,10 @@ func AddPermissionUser(tx *gorm.DB, uid int64, groupIdList []int64) error {
 		})
 	}
 	err := tx.Create(&puList).Error
+	return err
+}
+
+func DeletePermissionUser(tx *gorm.DB, uid int64) error {
+	err := tx.Where("uid = ?", uid).Delete(&PermissionUser{}).Error
 	return err
 }

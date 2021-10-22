@@ -21,6 +21,8 @@ func InitRouter() *gin.Engine {
 	apiG.POST("/user/list", jwt.AuthAdmin, user.GetUserList)
 	apiG.POST("/user/delete", jwt.AuthAdmin, user.DeleteUser)
 	apiG.POST("/user/register", jwt.AuthAdmin, user.AddUser)
+	apiG.POST("/user/edit", jwt.AuthAdmin, user.EditUser)
+	apiG.POST("/user/pwd_edit", jwt.AuthAdmin, user.EditUserPassword)
 
 	apiG.POST("/message/message_inbox_profile_list", jwt.AuthLogin, message.GetMessageInboxProfileList)
 	apiG.POST("/message/message_inbox_detail", jwt.AuthLogin, message.GetMessageInboxDetail)
@@ -29,6 +31,7 @@ func InitRouter() *gin.Engine {
 	apiG.POST("/message/mark_read", jwt.AuthLogin, message.MarkAsReadMessage)
 
 	apiG.POST("/permission/list", jwt.AuthAdmin, permission.GetPermissionList)
+	apiG.POST("/permission/user", jwt.AuthAdmin, permission.GetPermissionGroupOfUser)
 
 	return r
 }

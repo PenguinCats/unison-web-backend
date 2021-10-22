@@ -15,6 +15,7 @@ type userProfileRequest struct {
 }
 
 type userProfileResponse struct {
+	Username  string `json:"username"`
 	Uid       int64  `json:"uid"`
 	Name      string `json:"name"`
 	Authority int64  `json:"authority"`
@@ -53,6 +54,7 @@ func GetUserProfile(c *gin.Context) {
 	appG.Response(http.StatusOK, e.SUCCESS, userProfileResponse{
 		Uid:       userService.UID,
 		Name:      userService.Name,
+		Username:  userService.Username,
 		Authority: userService.Authority,
 		SeuID:     userService.SeuID,
 	})

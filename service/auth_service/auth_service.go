@@ -1,6 +1,9 @@
 package auth_service
 
-import "github.com/PenguinCats/unison-web-backend/models"
+import (
+	"github.com/PenguinCats/unison-web-backend/models"
+	"github.com/PenguinCats/unison-web-backend/pkg/e"
+)
 
 type Auth struct {
 	Uid int64
@@ -44,4 +47,12 @@ func (a *Auth) IsSelfOrAdmin(outerUID int64) bool {
 		return true
 	}
 	return false
+}
+
+func (a *Auth) GetAuthority() (int64, int) {
+	auth, err := models.GetAuthByUID(a.Uid)
+	if err != nil {
+		return auth, e.ERROR
+	}
+	return auth, e.SUCCESS
 }

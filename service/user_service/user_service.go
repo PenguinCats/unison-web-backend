@@ -101,6 +101,7 @@ func (u *User) GetUserProfileByUid() error {
 		return err
 	}
 
+	u.Username = user.Username
 	u.Name = user.Name
 	u.Authority = user.Authority
 	u.SeuID = user.SeuID
@@ -159,14 +160,50 @@ func (u *User) AddUserUnion() int {
 		return e.ERROR
 	}
 
-	if len(u.PermissionGroup) > 0 {
-		err = models.AddPermissionUser(tx, user.UID, u.PermissionGroup)
-		if err != nil {
-			tx.Rollback()
-			return e.ERROR
-		}
+	err = models.AddPermissionUser(tx, user.UID, u.PermissionGroup)
+	if err != nil {
+		tx.Rollback()
+		return e.ERROR
 	}
 
 	tx.Commit()
+	return e.SUCCESS
+}
+
+func (u *User) EditUserUnion() int {
+	tx := models.NewContextForTransaction()
+
+	err := models.UserEdit(tx, models.User{
+		UID:       u.UID,
+		Name:      u.Name,
+		Authority: u.Authority,
+		SeuID:     u.SeuID,
+	})
+	if err != nil {
+		tx.Rollback()
+		return e.ERROR
+	}
+
+	err = models.DeletePermissionUser(tx, u.UID)
+	if err != nil {
+		tx.Rollback()
+		return e.ERROR
+	}
+
+	err = models.AddPermissionUser(tx, u.UID, u.PermissionGroup)
+	if err != nil {
+		tx.Rollback()
+		return e.ERROR
+	}
+
+	tx.Commit()
+	return e.SUCCESS
+}
+
+func (u *User) EditUserPassword() int {
+	err := models.EditUserPassword(u.UID, u.Password)
+	if err != nil {
+		return e.ERROR
+	}
 	return e.SUCCESS
 }
