@@ -23,7 +23,7 @@ func AuthLogin(c *gin.Context) {
 	_, code := util.CheckClaims(token)
 
 	if code != e.SUCCESS {
-		c.JSON(http.StatusUnauthorized, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code": code,
 			"msg":  e.GetMsg(code),
 		})
@@ -53,7 +53,7 @@ func AuthRoot(c *gin.Context) {
 	}
 
 	if code != e.SUCCESS {
-		c.JSON(http.StatusUnauthorized, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code": code,
 			"msg":  e.GetMsg(code),
 		})
@@ -83,7 +83,7 @@ func AuthAdmin(c *gin.Context) {
 	}
 
 	if code != e.SUCCESS {
-		c.JSON(http.StatusUnauthorized, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code": code,
 			"msg":  e.GetMsg(code),
 		})
