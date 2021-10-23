@@ -33,3 +33,12 @@ func (p *PermissionGroupService) GetPermissionGroupList() (*[]models.PermissionG
 	}
 	return users, e.SUCCESS
 }
+
+func (p *PermissionGroupService) GetGroupsByGroupIDs(ids []int64) (*[]models.PermissionGroup, int) {
+	groups, err := models.GetPermissionGroupsByIDs(ids)
+	if err != nil {
+		return nil, e.ERROR
+
+	}
+	return groups, e.SUCCESS
+}

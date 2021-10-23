@@ -13,7 +13,8 @@ type getPermissionGroupOfUserRequest struct {
 }
 
 type getPermissionGroupOfUserResponse struct {
-	Gids []int64 `json:"gids"`
+	Gids  []int64  `json:"gids"`
+	GName []string `json:"gnames"`
 }
 
 func GetPermissionGroupOfUser(c *gin.Context) {
@@ -34,5 +35,20 @@ func GetPermissionGroupOfUser(c *gin.Context) {
 		return
 	}
 
-	appG.Response(http.StatusOK, code, getPermissionGroupOfUserResponse{Gids: *gids})
+	var pgs permission_group_service.PermissionGroupService
+	groups, code := pgs.GetGroupsByGroupIDs(*gids)
+	if code != e.SUCCESS {
+		appG.Response(http.StatusOK, code, nil)
+		return
+	}
+
+	var res getPermissionGroupOfUserResponse
+	if groups != nil {
+		for _, item := range *groups {
+			res.Gids = append(res.Gids, item.GroupID)
+			res.GName = append(res.GName, item.Name)
+		}
+	}
+
+	appG.Response(http.StatusOK, code, res)
 }

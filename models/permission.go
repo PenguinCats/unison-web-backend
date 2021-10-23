@@ -17,6 +17,16 @@ func GetPermissionNameByID(id int64) (string, error) {
 	return name, err
 }
 
+func GetPermissionGroupsByIDs(ids []int64) (*[]PermissionGroup, error) {
+	if len(ids) == 0 {
+		return nil, nil
+	}
+	var groups []PermissionGroup
+
+	err := db.Model(&PermissionGroup{}).Where("group_id IN ?", ids).Find(&groups).Error
+	return &groups, err
+}
+
 func GetPermissionGroupList() (*[]PermissionGroup, error) {
 	var groups []PermissionGroup
 	err := db.Find(&groups).Error

@@ -31,7 +31,7 @@ func InitRouter() *gin.Engine {
 	apiG.POST("/message/mark_read", jwt.AuthLogin, message.MarkAsReadMessage)
 
 	apiG.POST("/permission/list", jwt.AuthAdmin, permission.GetPermissionList)
-	apiG.POST("/permission/user", jwt.AuthAdmin, permission.GetPermissionGroupOfUser)
+	apiG.POST("/permission/user", jwt.AuthLogin, permission.GetPermissionGroupOfUser)
 
 	return r
 }
