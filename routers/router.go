@@ -3,6 +3,7 @@ package routers
 import (
 	"github.com/PenguinCats/unison-web-backend/middleware/jwt"
 	"github.com/PenguinCats/unison-web-backend/routers/api/auth"
+	"github.com/PenguinCats/unison-web-backend/routers/api/host"
 	"github.com/PenguinCats/unison-web-backend/routers/api/message"
 	"github.com/PenguinCats/unison-web-backend/routers/api/permission"
 	"github.com/PenguinCats/unison-web-backend/routers/api/user"
@@ -32,6 +33,16 @@ func InitRouter() *gin.Engine {
 
 	apiG.POST("/permission/list", jwt.AuthAdmin, permission.GetPermissionList)
 	apiG.POST("/permission/user", jwt.AuthLogin, permission.GetPermissionGroupOfUser)
+	apiG.POST("/permission/update_name", jwt.AuthAdmin, permission.UpdatePermissionGroupName)
+	apiG.POST("/permission/delete", jwt.AuthAdmin, permission.DeletePermissionGroup)
+	apiG.POST("/permission/add", jwt.AuthAdmin, permission.AddPermissionGroup)
+	apiG.POST("/permission/host_bind", jwt.AuthAdmin, permission.BindPermissionGroupHost)
+	apiG.POST("/permission/host", jwt.AuthAdmin, permission.GetHostOfPermissionGroup)
+
+	apiG.POST("/host/all_list", jwt.AuthAdmin, host.GetHostAllList)
+	apiG.POST("/host/update_ext", jwt.AuthAdmin, host.UpdateHostExt)
+	apiG.POST("/host/update_add_token", jwt.AuthAdmin, host.UpdateHostAddToken)
+	apiG.POST("/host/get_add_token", jwt.AuthAdmin, host.GetHostAddToken)
 
 	return r
 }

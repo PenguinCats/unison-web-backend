@@ -6,7 +6,7 @@ import (
 )
 
 func TestGetUIDByUserName(t *testing.T) {
-	setupForTest()
+	SetupForTest()
 	uid, err := GetUIDByUserName("zhangbinjie")
 	fmt.Println(uid, err)
 	if err != nil {
@@ -15,7 +15,7 @@ func TestGetUIDByUserName(t *testing.T) {
 }
 
 func TestExistUserByUserName(t *testing.T) {
-	setupForTest()
+	SetupForTest()
 	flag, err := ExistUserByUserName("zhangbinjie")
 	fmt.Println(flag, err)
 	if err != nil {
@@ -24,7 +24,7 @@ func TestExistUserByUserName(t *testing.T) {
 }
 
 func TestGetUserByUID(t *testing.T) {
-	setupForTest()
+	SetupForTest()
 	user, err := GetUserByUID(1)
 	fmt.Println(user, err)
 	if err != nil {
@@ -39,7 +39,7 @@ func TestGetUserByUID(t *testing.T) {
 }
 
 func TestGetUserAll(t *testing.T) {
-	setupForTest()
+	SetupForTest()
 	users, err := GetUserAll()
 	for _, user := range users {
 		fmt.Println(*user)
@@ -51,7 +51,7 @@ func TestGetUserAll(t *testing.T) {
 }
 
 func TestGetPwdByUid(t *testing.T) {
-	setupForTest()
+	SetupForTest()
 	pwd, err := GetPwdByUid(1)
 	fmt.Println(pwd, err)
 	if err != nil {

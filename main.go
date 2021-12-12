@@ -6,6 +6,7 @@ import (
 	"github.com/PenguinCats/unison-web-backend/pkg/setting"
 	"github.com/PenguinCats/unison-web-backend/pkg/util"
 	"github.com/PenguinCats/unison-web-backend/routers"
+	"github.com/PenguinCats/unison-web-backend/service/host_service"
 	"log"
 	"net/http"
 
@@ -16,6 +17,8 @@ func init() {
 	setting.Setup()
 	models.Setup()
 	util.Setup()
+
+	host_service.SetUp()
 }
 
 func main() {

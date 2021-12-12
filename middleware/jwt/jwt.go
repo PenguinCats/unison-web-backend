@@ -76,10 +76,11 @@ func AuthAdmin(c *gin.Context) {
 	}
 
 	claims, code := util.CheckClaims(token)
-
-	authService := auth_service.Auth{Uid: claims.Uid}
-	if code == e.SUCCESS && !authService.IsAdmin() {
-		code = e.ERROR_AUTH_PERMISSION_DENIED
+	if code == e.SUCCESS {
+		authService := auth_service.Auth{Uid: claims.Uid}
+		if !authService.IsAdmin() {
+			code = e.ERROR_AUTH_PERMISSION_DENIED
+		}
 	}
 
 	if code != e.SUCCESS {

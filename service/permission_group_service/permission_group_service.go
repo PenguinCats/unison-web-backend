@@ -42,3 +42,27 @@ func (p *PermissionGroupService) GetGroupsByGroupIDs(ids []int64) (*[]models.Per
 	}
 	return groups, e.SUCCESS
 }
+
+func (p *PermissionGroupService) EditGroupName() int {
+	err := models.UpdatePermissionGroupName(p.GroupID, p.Name)
+	if err != nil {
+		return e.ERROR
+	}
+	return e.SUCCESS
+}
+
+func (p *PermissionGroupService) DeleteGroup() int {
+	err := models.DeletePermissionGroup(p.GroupID)
+	if err != nil {
+		return e.ERROR
+	}
+	return e.SUCCESS
+}
+
+func (p *PermissionGroupService) AddGroup() int {
+	err := models.AddPermissionGroup(p.Name)
+	if err != nil {
+		return e.ERROR
+	}
+	return e.SUCCESS
+}

@@ -31,6 +31,12 @@ type Mysql struct {
 
 var MysqlSetting = &Mysql{}
 
+type UDC struct {
+	URL string
+}
+
+var UDCSetting = &UDC{}
+
 var cfg *ini.File
 
 func Setup() {
@@ -47,6 +53,8 @@ func Setup() {
 	ServerSetting.WriteTimeout = ServerSetting.WriteTimeout * time.Second
 
 	mapTo("mysql", MysqlSetting)
+
+	mapTo("udc", UDCSetting)
 }
 
 // mapTo map section

@@ -29,6 +29,11 @@ func EditUser(c *gin.Context) {
 	authServiceTarget := auth_service.Auth{
 		Uid: req.Uid,
 	}
+	authTarget, code := authServiceTarget.GetAuthority()
+	if code != e.SUCCESS {
+		appG.Response(http.StatusOK, code, nil)
+		return
+	}
 
 	uid, code := util.ParseUidFromContext(appG.C)
 	if code != e.SUCCESS {
@@ -44,9 +49,16 @@ func EditUser(c *gin.Context) {
 		return
 	}
 
-	if (authServiceTarget.IsAdmin() && uid != req.Uid) || (uid == req.Uid && req.Authority != authUid) {
-		appG.Response(http.StatusOK, e.ERROR_AUTH_PERMISSION_DENIED, nil)
-		return
+	if uid == req.Uid {
+		if req.Authority != authUid {
+			appG.Response(http.StatusOK, e.ERROR_AUTH_PERMISSION_DENIED, nil)
+			return
+		}
+	} else {
+		if (!authService.IsRoot()) && req.Authority != authTarget {
+			appG.Response(http.StatusOK, e.ERROR_AUTH_PERMISSION_DENIED, nil)
+			return
+		}
 	}
 
 	userService := user_service.User{

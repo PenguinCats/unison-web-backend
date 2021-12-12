@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-func setupForTest() {
+func SetupForTest() {
 	var err error
 	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		"urcp",
