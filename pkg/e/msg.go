@@ -11,6 +11,8 @@ var MsgFlags = map[int]string{
 	ERROR_AUTH_LOGIN_WRONG_UNAME_PWD: "用户名或密码错误",
 	ERROR_AUTH_LOGIN_INVALID_SEU_ID:  "该学号尚未绑定有效账号",
 	ERROR_AUTH_LOGIN_INVALID_QQ_ID:   "该QQ号尚未绑定有效账号",
+
+	ERROR_OPERATION_GENERATION: "操作指令生成失败",
 }
 
 // GetMsg get error information based on Code

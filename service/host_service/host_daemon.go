@@ -150,3 +150,7 @@ func (hd *HostDaemon) GetHostAddToken() (token string, code int) {
 
 	return res.Token, e.SUCCESS
 }
+
+func (hd *HostDaemon) RemoveHostUUIDFromDaemon(hostUUID string) {
+	delete(hd.ExistingHostUUIDList, hostUUID)
+}

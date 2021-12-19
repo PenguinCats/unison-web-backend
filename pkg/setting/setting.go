@@ -2,6 +2,7 @@ package setting
 
 import (
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/go-ini/ini"
@@ -14,10 +15,12 @@ type App struct {
 var AppSetting = &App{}
 
 type Server struct {
-	RunMode      string
-	HttpPort     int
-	ReadTimeout  time.Duration
-	WriteTimeout time.Duration
+	RunMode        string
+	Domain         string
+	HttpPort       int
+	CallbackPrefix string
+	ReadTimeout    time.Duration
+	WriteTimeout   time.Duration
 }
 
 var ServerSetting = &Server{}
@@ -51,6 +54,7 @@ func Setup() {
 	mapTo("server", ServerSetting)
 	ServerSetting.ReadTimeout = ServerSetting.ReadTimeout * time.Second
 	ServerSetting.WriteTimeout = ServerSetting.WriteTimeout * time.Second
+	ServerSetting.CallbackPrefix = ServerSetting.Domain + ":" + strconv.Itoa(ServerSetting.HttpPort) + "/callback"
 
 	mapTo("mysql", MysqlSetting)
 

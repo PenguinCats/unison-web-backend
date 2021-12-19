@@ -34,3 +34,8 @@ func UpdateExt(hid int64, ext string) error {
 	err := db.Model(&h).Update("ext", ext).Error
 	return err
 }
+
+func DeleteHostByUUID(uuid string) error {
+	err := db.Where("uuid = ?", uuid).Delete(&Host{}).Error
+	return err
+}
