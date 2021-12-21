@@ -104,6 +104,9 @@ func (hd *HostDaemon) GetAllHostList() (hostProfile []types.SlaveProfile, host [
 	var allHostUUIDList []string
 	uuid2host := map[string]models.Host{}
 	for _, host := range *allHosts {
+		if host.UUID == "" {
+			continue
+		}
 		allHostUUIDList = append(allHostUUIDList, host.UUID)
 		uuid2host[host.UUID] = host
 	}
@@ -124,6 +127,21 @@ func (hd *HostDaemon) GetAllHostList() (hostProfile []types.SlaveProfile, host [
 
 	for _, lostHost := range uuid2host {
 		lost = append(lost, lostHost)
+	}
+	return
+}
+
+func (hd *HostDaemon) GetHostProfile(uuids []string) (hostProfile []types.SlaveProfile, err error) {
+	hostProfileListPath := setting.UDCSetting.URL + "/slave/profile"
+	req := types.APISlaveProfileListRequest{SlavesUUID: uuids}
+	var res types.APISlaveProfileListResponse
+	err = util.HttpPost(hostProfileListPath, &req, &res)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, slave := range res.Slaves {
+		hostProfile = append(hostProfile, slave)
 	}
 	return
 }

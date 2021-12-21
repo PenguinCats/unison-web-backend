@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-type hostAllListItem struct {
+type HostAllListItem struct {
 	HID      int64  `json:"hid"`
 	HostUUId string `json:"host_uuid"`
 	Ext      string `json:"ext"`
@@ -24,8 +24,8 @@ type hostAllListItem struct {
 	PhysicalCoreCnt int    `json:"physical_core_cnt"`
 }
 
-type hostAllListResponse struct {
-	Hosts []hostAllListItem `json:"hosts"`
+type HostAllListResponse struct {
+	Hosts []HostAllListItem `json:"hosts"`
 }
 
 func GetHostAllList(c *gin.Context) {
@@ -36,9 +36,9 @@ func GetHostAllList(c *gin.Context) {
 		appG.Response(http.StatusOK, e.ERROR, nil)
 	}
 
-	var hosts []hostAllListItem
+	var hosts []HostAllListItem
 	for idx := range host {
-		hosts = append(hosts, hostAllListItem{
+		hosts = append(hosts, HostAllListItem{
 			HID:             host[idx].Hid,
 			HostUUId:        host[idx].UUID,
 			Ext:             host[idx].Ext,
@@ -53,7 +53,7 @@ func GetHostAllList(c *gin.Context) {
 		})
 	}
 	for _, host := range lost {
-		hosts = append(hosts, hostAllListItem{
+		hosts = append(hosts, HostAllListItem{
 			HID:      host.Hid,
 			HostUUId: host.UUID,
 			Ext:      host.Ext,
@@ -61,5 +61,5 @@ func GetHostAllList(c *gin.Context) {
 		})
 	}
 
-	appG.Response(http.StatusOK, e.SUCCESS, &hostAllListResponse{Hosts: hosts})
+	appG.Response(http.StatusOK, e.SUCCESS, &HostAllListResponse{Hosts: hosts})
 }

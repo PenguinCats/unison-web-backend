@@ -10,13 +10,13 @@ import (
 	"net/http"
 )
 
-type hostDeleteRequest struct {
+type HostDeleteRequest struct {
 	HostUUID string `json:"host_uuid"`
 }
 
 func DeleteHost(c *gin.Context) {
 	appG := app.Gin{C: c}
-	var req hostDeleteRequest
+	var req HostDeleteRequest
 
 	if err := appG.C.BindJSON(&req); err != nil {
 		appG.Response(http.StatusOK, e.INVALID_PARAMS, nil)

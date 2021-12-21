@@ -1,5 +1,7 @@
 package models
 
+import "gorm.io/gorm"
+
 type Host struct {
 	Hid  int64  `gorm:"column:hid; primaryKey"`
 	UUID string `gorm:"column:uuid"`
@@ -38,4 +40,18 @@ func UpdateExt(hid int64, ext string) error {
 func DeleteHostByUUID(uuid string) error {
 	err := db.Where("uuid = ?", uuid).Delete(&Host{}).Error
 	return err
+}
+
+func GetHostUUIDByHid(hid []int64) (uuids []Host, err error) {
+	if len(hid) == 0 {
+		return []Host{}, nil
+	}
+	err = db.Where("hid in ?", hid).Find(&uuids).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return []Host{}, nil
+		}
+		return nil, err
+	}
+	return
 }

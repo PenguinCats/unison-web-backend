@@ -71,13 +71,16 @@ func (PermissionUser) TableName() string {
 	return "permission_user"
 }
 
-func GetPermissionGroupIDByUid(uid int64) (*[]int64, error) {
+func GetPermissionGroupIDByUid(uid int64) ([]int64, error) {
 	var id []int64
 	err := db.Model(&PermissionUser{}).Select("group_id").Where("uid = ?", uid).Find(&id).Error
 	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return []int64{}, nil
+		}
 		return nil, err
 	}
-	return &id, nil
+	return id, nil
 }
 
 func AddPermissionUser(tx *gorm.DB, uid int64, groupIdList []int64) error {
@@ -109,6 +112,20 @@ type PermissionHost struct {
 func GetHostsIDByGroupID(gid int64) (id []int64, err error) {
 	err = db.Model(&PermissionHost{}).Select("hid").Where("group_id = ?", gid).Find(&id).Error
 	if err != nil {
+		return nil, err
+	}
+	return
+}
+
+func GetHostsIDByGroupIDs(gids []int64) (id []int64, err error) {
+	if len(gids) == 0 {
+		return []int64{}, nil
+	}
+	err = db.Model(&PermissionHost{}).Select("hid").Where("group_id in ?", gids).Order("hid").Find(&id).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return []int64{}, nil
+		}
 		return nil, err
 	}
 	return

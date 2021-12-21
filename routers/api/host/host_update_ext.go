@@ -8,14 +8,14 @@ import (
 	"net/http"
 )
 
-type updateHostExtRequest struct {
+type UpdateHostExtRequest struct {
 	Hid int64  `json:"hid"`
 	Ext string `json:"ext"`
 }
 
 func UpdateHostExt(c *gin.Context) {
 	appG := app.Gin{C: c}
-	var req updateHostExtRequest
+	var req UpdateHostExtRequest
 
 	if err := appG.C.BindJSON(&req); err != nil {
 		appG.Response(http.StatusOK, e.INVALID_PARAMS, nil)
