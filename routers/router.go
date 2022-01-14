@@ -51,6 +51,7 @@ func InitRouter() *gin.Engine {
 	apiHost.POST("/authorized_list", jwt.AuthLogin, host.GetHostAuthorizedList)
 	apiHost.POST("/status", jwt.AuthLogin, host.GetHostStatus)
 	apiHost.POST("/image_list", jwt.AuthLogin, host.GetHostImageList)
+	apiHost.POST("/profile", jwt.AuthLogin, host.GetHostProfile)
 
 	callbackG := r.Group("/callback")
 	callbackHost := callbackG.Group("/host")

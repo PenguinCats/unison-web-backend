@@ -1,17 +1,16 @@
 package host
 
 import (
-	"github.com/PenguinCats/Unison-Elastic-Compute/api/types"
 	"github.com/PenguinCats/unison-web-backend/pkg/app"
 	"github.com/PenguinCats/unison-web-backend/pkg/e"
-	"github.com/PenguinCats/unison-web-backend/pkg/setting"
 	"github.com/PenguinCats/unison-web-backend/pkg/util"
+	"github.com/PenguinCats/unison-web-backend/service/host_service"
 	"github.com/PenguinCats/unison-web-backend/service/permission_group_service"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
-type HostAuthorizedListItem struct {
+type HostprofileItem struct {
 	HID      int64  `json:"hid"`
 	HostUUId string `json:"host_uuid"`
 	Ext      string `json:"ext"`
@@ -26,7 +25,7 @@ type HostAuthorizedListItem struct {
 }
 
 type HostAuthorizedListResponse struct {
-	Hosts []HostAuthorizedListItem `json:"hosts"`
+	Hosts []HostprofileItem `json:"hosts"`
 }
 
 func GetHostAuthorizedList(c *gin.Context) {
@@ -52,36 +51,35 @@ func GetHostAuthorizedList(c *gin.Context) {
 		uuids = append(uuids, host.UUID)
 	}
 
-	hostProfileListPath := setting.UDCSetting.URL + "/slave/profile"
-	req := types.APISlaveProfileListRequest{SlavesUUID: uuids}
-	var res types.APISlaveProfileListResponse
-	err := util.HttpPost(hostProfileListPath, &req, &res)
+	slaves, err := host_service.GetHostDaemon().GetHostProfile(uuids)
 	if err != nil {
 		code = e.ERROR
 		appG.Response(http.StatusOK, code, nil)
+		return
 	}
 
-	if len(res.Slaves) != len(hosts) {
+	if len(slaves) != len(hosts) {
 		code = e.ERROR
 		appG.Response(http.StatusOK, code, nil)
+		return
 	}
 
-	response := HostAuthorizedListResponse{Hosts: []HostAuthorizedListItem{}}
+	response := HostAuthorizedListResponse{Hosts: []HostprofileItem{}}
 
 	for idx, host := range hosts {
 		// 若远程返回的结果 UUID 字段为空，则表示无法识别，已丢失
-		if res.Slaves[idx].SlaveUUId == host.UUID {
-			response.Hosts = append(response.Hosts, HostAuthorizedListItem{
+		if slaves[idx].SlaveUUId == host.UUID {
+			response.Hosts = append(response.Hosts, HostprofileItem{
 				HID:             host.Hid,
 				HostUUId:        host.UUID,
 				Ext:             host.Ext,
-				Platform:        res.Slaves[idx].Platform,
-				PlatformFamily:  res.Slaves[idx].PlatformFamily,
-				PlatformVersion: res.Slaves[idx].PlatformVersion,
-				MemoryTotalSize: res.Slaves[idx].MemoryTotalSize,
-				CpuModelName:    res.Slaves[idx].CpuModelName,
-				LogicalCoreCnt:  res.Slaves[idx].LogicalCoreCnt,
-				PhysicalCoreCnt: res.Slaves[idx].PhysicalCoreCnt,
+				Platform:        slaves[idx].Platform,
+				PlatformFamily:  slaves[idx].PlatformFamily,
+				PlatformVersion: slaves[idx].PlatformVersion,
+				MemoryTotalSize: slaves[idx].MemoryTotalSize,
+				CpuModelName:    slaves[idx].CpuModelName,
+				LogicalCoreCnt:  slaves[idx].LogicalCoreCnt,
+				PhysicalCoreCnt: slaves[idx].PhysicalCoreCnt,
 			})
 		}
 	}
