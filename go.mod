@@ -8,6 +8,7 @@ require (
 	github.com/gin-gonic/gin v1.7.4
 	github.com/go-ini/ini v1.63.2
 	github.com/go-playground/validator/v10 v10.8.0 // indirect
+	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/json-iterator/go v1.1.11 // indirect
 	github.com/kr/text v0.2.0 // indirect
@@ -26,5 +27,6 @@ require (
 	gorm.io/gorm v1.21.15
 )
 
-replace github.com/PenguinCats/Unison-Elastic-Compute => ../GoProject/Unison-Elastic-Compute
-replace github.com/PenguinCats/Unison-Docker-Controller => ../GoProject/Unison-Docker-Controller
+replace github.com/PenguinCats/Unison-Elastic-Compute => ../Unison-Elastic-Compute
+
+replace github.com/PenguinCats/Unison-Docker-Controller => ../Unison-Docker-Controller

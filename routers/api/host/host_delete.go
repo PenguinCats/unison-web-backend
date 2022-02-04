@@ -39,7 +39,6 @@ func DeleteHost(c *gin.Context) {
 
 func DeleteHostCallback(c *gin.Context) {
 	appG := app.Gin{C: c}
-
 	var resp types.APISlaveDeleteResponse
 	if err := appG.C.BindJSON(&resp); err != nil {
 		appG.Response(http.StatusOK, e.INVALID_PARAMS, nil)

@@ -18,7 +18,7 @@ type HostService struct {
 }
 
 func (hs *HostService) UpdateExt() int {
-	err := models.UpdateExt(hs.Hid, hs.Ext)
+	err := models.UpdateHostExt(hs.Hid, hs.Ext)
 	if err != nil {
 		return e.ERROR
 	}
@@ -44,6 +44,7 @@ func (hs *HostService) DeleteHost(uid int64) int {
 	errUnexpected := models.UpdateOperation(operationID, OperationStatus, "", "")
 	if errUnexpected != nil {
 		log.Println(errUnexpected.Error())
+		return e.ERROR
 	}
 
 	hostDeletePath := setting.UDCSetting.URL + "/slave/delete"
@@ -54,6 +55,7 @@ func (hs *HostService) DeleteHost(uid int64) int {
 		errUnexpected = models.UpdateOperation(operationID, OperationStatus, "", "")
 		if errUnexpected != nil {
 			log.Println(errUnexpected.Error())
+			return e.ERROR
 		}
 	}
 

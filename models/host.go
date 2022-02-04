@@ -28,7 +28,7 @@ func AddHost(h Host) error {
 	return err
 }
 
-func UpdateExt(hid int64, ext string) error {
+func UpdateHostExt(hid int64, ext string) error {
 	h := Host{
 		Hid: hid,
 		Ext: ext,

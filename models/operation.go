@@ -24,7 +24,7 @@ const (
 	OperationException
 )
 
-func (os *OperationStatus) getInt64() int64 {
+func (os *OperationStatus) GetInt64() int64 {
 	return int64(*os)
 }
 
@@ -44,7 +44,7 @@ func AddOperation(uid int64, description string) (int64, error) {
 
 func UpdateOperation(operationId int64, status OperationStatus, description, result string) error {
 	payload := map[string]interface{}{
-		"status": status.getInt64(),
+		"status": status.GetInt64(),
 	}
 	if description != "" {
 		payload["description"] = description

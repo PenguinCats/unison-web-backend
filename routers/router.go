@@ -3,8 +3,10 @@ package routers
 import (
 	"github.com/PenguinCats/unison-web-backend/middleware/jwt"
 	"github.com/PenguinCats/unison-web-backend/routers/api/auth"
+	"github.com/PenguinCats/unison-web-backend/routers/api/container"
 	"github.com/PenguinCats/unison-web-backend/routers/api/host"
 	"github.com/PenguinCats/unison-web-backend/routers/api/message"
+	"github.com/PenguinCats/unison-web-backend/routers/api/operation"
 	"github.com/PenguinCats/unison-web-backend/routers/api/permission"
 	"github.com/PenguinCats/unison-web-backend/routers/api/user"
 	"github.com/gin-gonic/gin"
@@ -53,9 +55,17 @@ func InitRouter() *gin.Engine {
 	apiHost.POST("/image_list", jwt.AuthLogin, host.GetHostImageList)
 	apiHost.POST("/profile", jwt.AuthLogin, host.GetHostProfile)
 
+	apiContainer := apiG.Group("/container")
+	apiContainer.POST("/create", jwt.AuthLogin, container.ContainerCreate)
+
+	apiOperation := apiG.Group("/operation")
+	apiOperation.POST("/status", jwt.AuthLogin, operation.OperationStatus)
+
 	callbackG := r.Group("/callback")
 	callbackHost := callbackG.Group("/host")
 	callbackHost.POST("/delete_callback", host.DeleteHostCallback)
+	callbackContainer := callbackG.Group("/container")
+	callbackContainer.POST("/create_callback", container.ContainerCreateCallback)
 
 	return r
 }
